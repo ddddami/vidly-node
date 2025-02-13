@@ -17,9 +17,8 @@ router.post("/", async (req, res) => {
 	}
 
 	const genreId = req.body.genreId;
-	// this is definitely an amateur and wrong way of doing this..
 	if (!mongoose.Types.ObjectId.isValid(genreId)) {
-		return res.status(400).send("Invalid ID format");
+		return res.status(400).send("Invalid movie");
 	}
 
 	const genre = await Genre.findById(genreId);
@@ -41,7 +40,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).send("Invalid ID format");
+		return res.status(400).send("Invalid movie");
 	}
 
 	const { error } = validateMovie(req.body);
@@ -51,7 +50,7 @@ router.put("/:id", async (req, res) => {
 
 	const genreId = req.body.genreId;
 	if (!mongoose.Types.ObjectId.isValid(genreId)) {
-		return res.status(400).send("Invalid ID format");
+		return res.status(400).send("Invalid genre");
 	}
 	const genre = await Genre.findById(genreId);
 	if (!genre) return res.status(400).send("Invalid genre.");
@@ -73,7 +72,7 @@ router.put("/:id", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).send("Invalid ID format");
+		return res.status(400).send("Invalid movie");
 	}
 
 	const movie = await Movie.findById(req.params.id);
@@ -83,7 +82,7 @@ router.get("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).send("Invalid ID format");
+		return res.status(400).send("Invalid movie");
 	}
 
 	const movie = await Movie.findByIdAndDelete();

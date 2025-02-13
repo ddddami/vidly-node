@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
+const objectId = (value, helpers) => {
+	if (!mongoose.Types.ObjectId.isValid(value)) {
+		return helpers.error("any.invalid");
+	}
+	return value;
+};
+
 const rentalSchema = new mongoose.Schema({
 	customer: {
 		type: new mongoose.Schema({
@@ -31,8 +38,8 @@ const rentalSchema = new mongoose.Schema({
 
 function validateRental(rental) {
 	const schema = Joi.object({
-		customerId: Joi.string().required(),
-		movieId: Joi.string().required(),
+		customerId: Joi.custom(objectId, "ObjectID validation").required(),
+		movieId: Joi.custom(objectId, "ObjectID validation").required(),
 	});
 	return schema.validate(rental);
 }
