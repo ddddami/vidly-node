@@ -6,7 +6,9 @@ const { User, validateUser } = require("../models/users");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-	const users = await User.find().sort("name");
+	const users = (await User.find().sort("name")).map((user) =>
+		_.pick(user, ["_id", "name", "email"]),
+	);
 	res.send(users);
 });
 
