@@ -1,5 +1,6 @@
 const express = require("express");
 const _ = require("lodash");
+const bcrypt = require("bcrypt");
 const { User, validateUser } = require("../models/users");
 
 const router = express.Router();
@@ -16,7 +17,8 @@ router.post("/", async (req, res) => {
 	let user = await User.findOne({ email: req.body.email });
 	if (user) return res.status(400).send("User already registered.");
 
-	user = new User(_.pick(req.body, ["name", "email", "password"]));
+	user = new User(_.pick(req.body, ["name", "email"]));
+	user.password = await bcrypt.hash(req.body.password, 10);
 
 	await user.save();
 
