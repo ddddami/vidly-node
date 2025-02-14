@@ -1,12 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
-
-const objectId = (value, helpers) => {
-	if (!mongoose.Types.ObjectId.isValid(value)) {
-		return helpers.error("any.invalid");
-	}
-	return value;
-};
+const { objectId } = require("../utils/validateObjectId");
 
 const rentalSchema = new mongoose.Schema({
 	customer: {

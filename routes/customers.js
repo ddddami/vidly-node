@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const validateObjectId = require("../middleware/validateObjectId");
 const { Customer, validate } = require("../models/customers");
 
 const router = express.Router();
@@ -9,11 +9,7 @@ router.get("/", async (req, res) => {
 	res.send(customers);
 });
 
-router.get("/:id", async (req, res) => {
-	if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).send("Invalid customer");
-	}
-
+router.get("/:id", validateObjectId(), async (req, res) => {
 	const customer = await Customer.findById(req.params.id);
 	if (!customer) return res.status(404).send("Customer not found");
 	res.send(customer);
@@ -33,11 +29,7 @@ router.post("/", async (req, res) => {
 	res.send(customer);
 });
 
-router.put("/:id", async (req, res) => {
-	if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).send("Invalid customer");
-	}
-
+router.put("/:id", validateObjectId(), async (req, res) => {
 	const { error } = validate(req.body);
 
 	if (error) {
@@ -53,11 +45,7 @@ router.put("/:id", async (req, res) => {
 	res.send(customer);
 });
 
-router.delete("/:id", async (req, res) => {
-	if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-		return res.status(400).send("Invalid customer");
-	}
-
+router.delete("/:id", validateObjectId(), async (req, res) => {
 	const genre = await Customer.findByIdAndDelete({ _id: req.params.id });
 	if (!genre) return res.status(404).send("Customer not found!");
 	res.send("Customer deleted");
