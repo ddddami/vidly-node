@@ -2,21 +2,11 @@ const express = require("express");
 const _ = require("lodash");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const { User } = require("../models/users");
+const { generateToken } = require("../utils/generateToken");
 
 const router = express.Router();
-
-async function generateToken(user) {
-	return jwt.sign(
-		{ id: user.id, name: user.name, email: user.email },
-		process.env.JWT_SECRET,
-		{
-			expiresIn: process.env.JWT_EXPIRES_IN,
-		},
-	);
-}
 
 router.post("/login", async (req, res) => {
 	const { error } = validate(req.body);

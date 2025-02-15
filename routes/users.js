@@ -1,3 +1,5 @@
+const { generateToken } = require("../utils/generateToken.js");
+
 const express = require("express");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
@@ -22,9 +24,11 @@ router.post("/", async (req, res) => {
 	user = new User(_.pick(req.body, ["name", "email"]));
 	user.password = await bcrypt.hash(req.body.password, 10);
 
-	await user.save();
+	const token = await generateToken(user);
 
-	res.send(_.pick(user, ["_id", "name", "email"]));
+	res
+		.header("x-auth-token", token)
+		.send(_.pick(user, ["_id", "name", "email"]));
 });
 
 module.exports = router;
