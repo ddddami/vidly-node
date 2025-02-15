@@ -7,8 +7,9 @@ const movies = require("./routes/movies");
 const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
-
 const authMiddleware = require("./middleware/auth");
+
+require("dotenv").config();
 
 const app = express();
 
