@@ -2,6 +2,8 @@ const express = require("express");
 const Joi = require("joi");
 const validateObjectId = require("../middleware/validateObjectId");
 const { Genre } = require("../models/genres");
+const admin = require("../middleware/admin");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -48,7 +50,7 @@ router.put("/:id", validateObjectId(), async (req, res) => {
 	res.send(genre);
 });
 
-router.delete("/:id", validateObjectId(), async (req, res) => {
+router.delete("/:id", validateObjectId(), auth, admin, async (req, res) => {
 	const genre = await Genre.findByIdAndDelete({ _id: req.params.id });
 	if (!genre) return res.status(404).send("Genre not found!");
 	res.send("Genre deleted");

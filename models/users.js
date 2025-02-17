@@ -17,11 +17,12 @@ const userSchema = new mongoose.Schema({
 		unique: true,
 	},
 	password: { type: String, required: true, minLenght: 6, maxLenght: 1024 },
+	isAdmin: { type: Boolean, default: false },
 });
 
-userSchema.methods.generateAuthToken = function () {
+userSchema.methods.generateAuthToken = function() {
 	return jwt.sign(
-		{ id: this.id, name: this.name, email: this.email },
+		{ id: this.id, name: this.name, email: this.email, isAdmin: this.isAdmin },
 		process.env.JWT_SECRET,
 		{
 			expiresIn: process.env.JWT_EXPIRES_IN,
