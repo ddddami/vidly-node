@@ -14,8 +14,21 @@ function validateGenre(genre) {
 	return schema.validate(genre);
 }
 
-router.get("/", async (req, res) => {
-	res.send(await Genre.find());
+// router.get("/", async (req, res) => {
+// 	try {
+// 		res.send(await Genre.find());
+// 	} catch (err) {
+// 		console.error("An unexpected error occured", err); // log the ex
+// 		res.status(500).send("An unexpected error occured");
+// 	}
+// }); // Using an errorMiddleware instead
+
+router.get("/", async (req, res, next) => {
+	try {
+		res.send(await Genre.find());
+	} catch (err) {
+		next(err);
+	}
 });
 
 router.get("/:id", validateObjectId(), async (req, res) => {

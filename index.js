@@ -8,6 +8,7 @@ const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 const authMiddleware = require("./middleware/auth");
+const error = require("./middleware/error");
 
 require("dotenv").config();
 
@@ -26,6 +27,8 @@ app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+
+app.use(error);
 
 app.get("/api/protected", authMiddleware, (req, res) => {
 	res.json({ message: "This is a protected route", user: req.user });
