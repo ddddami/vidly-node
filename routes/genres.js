@@ -4,7 +4,6 @@ const validateObjectId = require("../middleware/validateObjectId");
 const { Genre } = require("../models/genres");
 const admin = require("../middleware/admin");
 const auth = require("../middleware/auth");
-const asyncMiddleware = require("../middleware/async");
 
 const router = express.Router();
 
@@ -32,12 +31,9 @@ function validateGenre(genre) {
 // 	}
 // });
 
-router.get(
-	"/",
-	asyncMiddleware(async (req, res) => {
-		res.send(await Genre.find());
-	}),
-);
+router.get("/", async (req, res) => {
+	res.send(await Genre.find());
+});
 
 router.get("/:id", validateObjectId(), async (req, res) => {
 	const genre = await Genre.findById(req.params.id);
