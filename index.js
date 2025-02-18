@@ -2,6 +2,7 @@ require("express-async-errors");
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
+const pino = require("pino")();
 const genres = require("./routes/genres");
 const customers = require("./routes/customers");
 const movies = require("./routes/movies");
@@ -14,6 +15,13 @@ const error = require("./middleware/error");
 require("dotenv").config();
 
 const app = express();
+
+process.on("uncaughtException", (ex) => {
+	console.log(ex);
+	pino.error(ex);
+});
+
+// throw new Error();
 
 mongoose
 	.connect("mongodb://localhost:27017/vidly")
