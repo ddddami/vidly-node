@@ -19,9 +19,17 @@ const app = express();
 process.on("uncaughtException", (ex) => {
 	console.log(ex);
 	pino.error(ex);
+	process.exit(1);
 });
 
-// throw new Error();
+process.on("unhandledRejection", (ex) => {
+	// pino.error(ex.message, ex);
+	// process.exit(1);
+	throw ex; // passing it to uncaugthException handler
+});
+
+// const p = Promise.reject(new Error("something failed miserably"));
+// p.then(() => console.log("done"));
 
 mongoose
 	.connect("mongodb://localhost:27017/vidly")
