@@ -1,3 +1,4 @@
+console.log(__dirname);
 const pino = require("pino");
 const path = require("path");
 
@@ -36,7 +37,7 @@ module.exports = (err, req, res, next) => {
 			},
 			timestamp: pino.stdTimeFunctions.isoTime,
 		},
-		pino.destination(`${__dirname}/logs/app.log`),
+		pino.destination(`${__dirname}/../logs/app.log`),
 	);
 
 	logger.error(err.message, err);
