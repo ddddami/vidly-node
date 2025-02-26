@@ -1,6 +1,5 @@
 require("express-async-errors");
 const express = require("express");
-const mongoose = require("mongoose");
 const pino = require("pino")();
 const authMiddleware = require("./middleware/auth");
 
@@ -9,9 +8,9 @@ require("dotenv").config();
 const app = express();
 
 require("./startup/routes")(app);
+require("./startup/db")();
 
 process.on("uncaughtException", (ex) => {
-	console.log(ex);
 	pino.error(ex);
 	process.exit(1);
 });
@@ -24,11 +23,6 @@ process.on("unhandledRejection", (ex) => {
 
 // const p = Promise.reject(new Error("something failed miserably"));
 // p.then(() => console.log("done"));
-
-mongoose
-	.connect("mongodb://localhost:27017/vidly")
-	.then(() => console.log("Connected to MongoDB"))
-	.catch((err) => console.error("Could not connect to MongoDB", err));
 
 app.get("/api/protected", authMiddleware, (req, res) => {
 	res.json({ message: "This is a protected route", user: req.user });
