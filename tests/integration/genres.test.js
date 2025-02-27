@@ -25,4 +25,24 @@ describe("/api/genres", () => {
       expect(res.body[0]).toHaveProperty("name");
     });
   });
+
+  describe("GET /:id", () => {
+    it("should return 404 if genre is not found", async () => {
+      const res = await request(server).get("/api/genres/INVALID");
+      expect(res.status).toBe(400);
+    });
+
+    it("should return a genre with a given valid ID", async () => {
+      const genre = new Genre({ name: "genre1" });
+      await genre.save();
+
+      const res = await request(server).get("/api/genres/" + genre._id);
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({
+        _id: genre._id.toString(),
+        name: genre.name,
+      });
+      console.log(res.body);
+    });
+  });
 });
