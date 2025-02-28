@@ -1,5 +1,7 @@
 const express = require("express");
-require("dotenv").config();
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV || "development"}`,
+});
 
 const app = express();
 
@@ -7,4 +9,5 @@ require("./startup/errorHandler")();
 require("./startup/routes")(app);
 require("./startup/db")();
 
-app.listen(3000, () => console.log("Listening on port 3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log("Listening on port ", port));
