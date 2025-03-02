@@ -1,5 +1,6 @@
 const request = require("supertest");
 const { Genre } = require("../../models/genres");
+const { User } = require("../../models/users");
 
 let server;
 
@@ -43,6 +44,56 @@ describe("/api/genres", () => {
         name: genre.name,
       });
       console.log(res.body);
+    });
+  });
+
+  describe("POST /", () => {
+    it("should return 401 if client is unathenticated", async () => {
+      const res = await request(server).post("/api/genres").send({
+        name: "genre1",
+      });
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 400 if genre is less than three chars", async () => {
+      const token = new User().generateAuthToken();
+      const res = await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name: "12" });
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if genre is more than 50 chars", async () => {
+      const token = new User().generateAuthToken();
+      const res = await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name: "a".repeat(50 + 1) });
+      expect(res.status).toBe(400);
+    });
+
+    it("should the genre if it is valid", async () => {
+      const token = new User().generateAuthToken();
+      const res = await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name: "genre1" });
+
+      expect(res.status).toBe(201);
+      const genre = await Genre.find({ name: "genre1" });
+      expect(genre).not.toBeNull();
+    });
+
+    it("should return the valid if it is valid", async () => {
+      const token = new User().generateAuthToken();
+      const res = await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name: "genre1" });
+
+      expect(res.body).toHaveProperty("_id");
+      expect(res.body).toHaveProperty("name", "genre1");
     });
   });
 });
