@@ -14,7 +14,6 @@ describe("/api/genres", () => {
 		await Genre.insertMany(testGenres);
 
 		token = new User().generateAuthToken();
-		console.log(token, "superman");
 	});
 
 	afterEach(async () => {
@@ -53,8 +52,8 @@ describe("/api/genres", () => {
 	describe("POST /", () => {
 		let name;
 
-		const exec = async function () {
-			return await request(server)
+		const exec = function () {
+			return request(server)
 				.post("/api/genres")
 				.set("x-auth-token", token)
 				.send({ name });
@@ -83,7 +82,6 @@ describe("/api/genres", () => {
 			name = "genre1";
 			await exec();
 
-			console.log(token, "ops");
 			const genre = await Genre.find({ name });
 			expect(genre).not.toBeNull();
 		});
