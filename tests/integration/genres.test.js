@@ -1,4 +1,5 @@
 const request = require("supertest");
+const mongoose = require("mongoose");
 const { Genre } = require("../../models/genres");
 const { User } = require("../../models/users");
 
@@ -31,21 +32,27 @@ describe("/api/genres", () => {
 	});
 
 	describe("GET /:id", () => {
-		it("should return 404 if genre is not found", async () => {
+		it("should return 404 if invalid ID is passed", async () => {
 			const res = await request(server).get("/api/genres/INVALID");
 			expect(res.status).toBe(400);
 		});
 
-		it("should return a genre with a given valid ID", async () => {
-			const genre = new Genre({ name: "genre1" });
-			await genre.save();
+		it("should return 404 if no genre with given ID is found", async () => {
+			const id = new mongoose.Types.ObjectId();
+			const res = await request(server).get("/api/genres/" + id);
+			expect(res.status).toBe(404);
+		});
+	});
 
-			const res = await request(server).get("/api/genres/" + genre._id);
-			expect(res.status).toBe(200);
-			expect(res.body).toMatchObject({
-				_id: genre._id.toString(),
-				name: genre.name,
-			});
+	it("should return a genre with a given valid ID", async () => {
+		const genre = new Genre({ name: "genre1" });
+		await genre.save();
+
+		const res = await request(server).get("/api/genres/" + genre._id);
+		expect(res.status).toBe(200);
+		expect(res.body).toMatchObject({
+			_id: genre._id.toString(),
+			name: genre.name,
 		});
 	});
 

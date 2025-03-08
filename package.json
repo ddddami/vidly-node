@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"dev": "nodemon app.js",
-		"test": "jest --watchAll --verbose",
+		"test": "jest --watchAll --verbose --coverage",
 		"lint": "eslint ."
 	},
 	"dependencies": {
